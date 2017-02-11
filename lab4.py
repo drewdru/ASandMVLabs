@@ -6,7 +6,6 @@ import os
 import sys
 import math
 import argparse
-from multiprocessing import Process, Queue
 from PIL import Image
 
 def rmsDifference(img1, img2, size):
@@ -82,7 +81,7 @@ def DCT(img, size):
 
 
 # pHash https://habrahabr.ru/post/120562/
-def getImageHash(img, size, queue):
+def getImageHash(img, size, isBin):
     """
         Calculate image pHash
         @param img The image
@@ -106,66 +105,70 @@ def getImageHash(img, size, queue):
                 hashString += '1'
             else:
                 hashString += '0'
-    hashString = "{0:0>4X}".format(int(hashString, 2))
-    queue.put(hashString)
+    if isBin:
+        return hashString
+    return "{0:0>4X}".format(int(hashString, 2))
 
 # may be optimized: https://habrahabr.ru/post/211264/
-def isSimilarPHash(hashString1, hashString2):
+def checkHammingDistance(hashString1, hashString2, hashLength, HammingDistance):
     """
         Check difference of hashes
         @param hashString1 The hash string
         @param hashString2 The hash string
-        @return True if count of hashes difference < 16
+        @return True if count of hashes difference < hashLength
     """
-    if len(hashString1) != 16 or len(hashString2) != 16:
+    if (len(hashString1) != hashLength) or (len(hashString2) != hashLength):
         raise Exception('One of two strings not a 64-bit hash')
     differenceSum = 0
-    for indx in range(16):
+    for indx in range(hashLength):
         if hashString1[indx] != hashString2[indx]:
             differenceSum += 1
-        if differenceSum > 5:
+        if differenceSum > HammingDistance:
             return False
     return True
 
 
-def findSimilarImagesByPHash(imgDir):
+def findSimilarImagesByPHash(imgDir, isBin, HammingDistance):
     """
         Find similar images by pHash in directory
         @param imgDir The path to directory with images
     """
+    hashLength = 16
+    if isBin:
+        hashLength = 64
+    if (HammingDistance > hashLength) or (HammingDistance > hashLength):
+        raise Exception('Incorrect HammingDistance\n'
+            'HammingDistance <= 64 if isBin\n'
+            'Or HammingDistance <= 64 if !isBin')
     size = 32, 32
     imageList = os.listdir(imgDir)
-    for index, inImage1 in enumerate(imageList):
-        img1Path = imgDir + inImage1
-        img1 = Image.open(img1Path)
-        img1 = img1.resize(size, Image.ANTIALIAS)
-        img1 = img1.convert(mode='RGB')
+    imgInfoList = []
+    print('Get images hash')
+    imageListLength = len(imageList)
+    for indx, inImage in enumerate(imageList):
+        sys.stdout.write('\r')
+        # the exact output you're looking for:
+        sys.stdout.write('img {} of {}'.format(indx + 1, imageListLength))
+        sys.stdout.flush()
+        imgPath = imgDir + inImage
+        img = Image.open(imgPath)
+        img = img.resize(size, Image.ANTIALIAS)
+        img = img.convert(mode='RGB')
+        imgHash = getImageHash(img, size, isBin)
+        imgInfoList.append({'hash': imgHash, 'path': imgPath})
+    print('\nFind similar images by pHash')
+    for index, imgInfo1 in enumerate(imgInfoList):
         startINDX = index+1
-        for inImage2 in imageList[startINDX:]:
-            img2Path = imgDir + inImage2
-            img2 = Image.open(img2Path)
-            img2 = img2.resize(size, Image.ANTIALIAS)
-            img2 = img2.convert(mode='RGB')
-
-            q1 = Queue()
-            q2 = Queue()
-            p1 = Process(target=getImageHash, args=(img1, size, q1))
-            p1.start()
-            p2 = Process(target=getImageHash, args=(img2, size, q2))
-            p2.start()
-            img1PHash = q1.get()
-            img2PHash = q2.get()
-            p1.join()
-            p2.join()
-
-            if isSimilarPHash(img1PHash, img2PHash):
-                similarImagesPaths = '{}\n{}\n\n'.format(img1Path, img2Path)
+        for imgInfo2 in imgInfoList[startINDX:]:
+            if checkHammingDistance(imgInfo1['hash'], imgInfo2['hash'],
+                    hashLength, HammingDistance):
+                similarImagesPaths = '{}\n{}\n\n'.format(imgInfo1['path'], imgInfo2['path'])
                 print(similarImagesPaths)
                 with open('similarImages.txt', 'a+') as f:
                     f.write(similarImagesPaths)
 
 
-def main(method=0, imgDir=None):
+def main(method=0, imgDir=None, isBin=False, HammingDistance=5):
     """ main function """
     if method == 0:
         while True:
@@ -183,7 +186,7 @@ def main(method=0, imgDir=None):
     if method == 1:
         findSimilarImagesByRMSD(imgDir)
     if method == 2:
-        findSimilarImagesByPHash(imgDir)
+        findSimilarImagesByPHash(imgDir, isBin, HammingDistance)
     print('Paths to Similar images wrtite to similarImages.txt')
 
 
@@ -208,5 +211,21 @@ if __name__ == "__main__":
             1.Root mean square difference of images
             2.Similar images by pHash
             ''')
+    parser.add_argument('-b', '--bin',
+        nargs='?',
+        type=bool,
+        metavar='isBin',
+        dest='isBin',
+        const=False,
+        default=False,
+        help='is binary pHash')
+    parser.add_argument('--hamming',
+        nargs='?',
+        type=int,
+        metavar='HammingDistance',
+        dest='HammingDistance',
+        const=5,
+        default=5,
+        help='is Hamming distance')
     args = parser.parse_args()
-    sys.exit(main(args.method, args.directory))
+    sys.exit(main(args.method, args.directory, args.isBin, args.HammingDistance))
