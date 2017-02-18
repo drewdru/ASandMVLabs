@@ -11,10 +11,11 @@ from PIL import Image
 def rmsDifference(img1, img2, size):
     """
         Calculate root mean square difference of two images
+
         @param img1 The first image
         @param img2 The second image
-        @param size The images width and height
-        @return root mean square difference of two images
+        @param size The width and height
+        @return Root mean square difference of two images
     """
     res = 0
     for i in range(size[0]):
@@ -31,6 +32,7 @@ def rmsDifference(img1, img2, size):
 def findSimilarImagesByRMSD(imgDir):
     """
         Find similar images by RMSD in directory
+
         @param imgDir The path to directory with images
     """
     size = 32, 32
@@ -54,13 +56,13 @@ def findSimilarImagesByRMSD(imgDir):
                     f.write(similarImagesPaths)
 
 
-
 def DCT(img, size):
     """
         Calculate discrete cosine transform
+
         @param img The image
-        @param size The image width and height
-        @return array is upper left 8x8 block of DCTMatrix
+        @param size The width and height
+        @return List of upper left 8x8 block of DCTMatrix
     """
     DCTMatrix = [[0 for x in range(size[0])] for y in range(size[1])]
     for u in range(size[0]):
@@ -84,8 +86,9 @@ def DCT(img, size):
 def getImageHash(img, size, isBin):
     """
         Calculate image pHash
+
         @param img The image
-        @param size The image width and height
+        @param size The width and height
         @return 64-bit hash string
     """
     img = img.resize(size, Image.ANTIALIAS)
@@ -113,9 +116,10 @@ def getImageHash(img, size, isBin):
 def checkHammingDistance(hashString1, hashString2, hashLength, HammingDistance):
     """
         Check difference of hashes
+
         @param hashString1 The hash string
         @param hashString2 The hash string
-        @return True if count of hashes difference < hashLength
+        @return Return True if count of hashes difference < hashLength
     """
     if (len(hashString1) != hashLength) or (len(hashString2) != hashLength):
         raise Exception('One of two strings not a 64-bit hash')
@@ -131,6 +135,7 @@ def checkHammingDistance(hashString1, hashString2, hashLength, HammingDistance):
 def findSimilarImagesByPHash(imgDir, isBin, HammingDistance):
     """
         Find similar images by pHash in directory
+
         @param imgDir The path to directory with images
     """
     hashLength = 16
@@ -168,7 +173,7 @@ def findSimilarImagesByPHash(imgDir, isBin, HammingDistance):
                     f.write(similarImagesPaths)
 
 
-def main(method=0, imgDir=None, isBin=False, HammingDistance=5):
+def main(method=0, imgDir='./defaultImgDir/', isBin=False, HammingDistance=5):
     """ main function """
     if method == 0:
         while True:
@@ -181,8 +186,6 @@ def main(method=0, imgDir=None, isBin=False, HammingDistance=5):
                 break
             except ValueError:
                 print('Please write a number [1-2]')
-    if imgDir is None:
-        imgDir = './defaultImgDir/'
     if method == 1:
         findSimilarImagesByRMSD(imgDir)
     if method == 2:
@@ -198,6 +201,7 @@ if __name__ == "__main__":
         dest='directory',
         # action='store_const',
         const='./defaultImgDir/',
+        default='./defaultImgDir/',
         help='a directory path for find similar images')
     parser.add_argument('-m', '--method',
         nargs='?',
