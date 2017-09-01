@@ -1,0 +1,3 @@
+https://habrahabr.ru/post/81279/
+
+python main.py 0.5 4 500 50 beach.gif out.gif

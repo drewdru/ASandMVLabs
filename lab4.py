@@ -230,6 +230,6 @@ if __name__ == "__main__":
         dest='HammingDistance',
         const=5,
         default=5,
-        help='is Hamming distance')
+        help='Hamming distance')
     args = parser.parse_args()
     sys.exit(main(args.method, args.directory, args.isBin, args.HammingDistance))

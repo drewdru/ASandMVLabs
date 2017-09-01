@@ -1,2 +1,11 @@
 defaultImgDir/*
 similarImages.txt
+*.docx
+*.odt
+*.pdf
+*.odg
+*.lab
+.vscode/
+__pycache__/
+env3
+

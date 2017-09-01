@@ -1,0 +1,15 @@
+C:\Users\svyatoslav\Desktop\gumennikova\4_lab\WordsRecognition\WordsRecognition\bin\Debug\WordsRecognition.exe.config
+C:\Users\svyatoslav\Desktop\gumennikova\4_lab\WordsRecognition\WordsRecognition\obj\Debug\WordsRecognition.csprojResolveAssemblyReference.cache
+C:\Users\svyatoslav\Desktop\gumennikova\4_lab\WordsRecognition\WordsRecognition\obj\Debug\WordsRecognition.MainForm.resources
+C:\Users\svyatoslav\Desktop\gumennikova\4_lab\WordsRecognition\WordsRecognition\obj\Debug\WordsRecognition.Properties.Resources.resources
+C:\Users\svyatoslav\Desktop\gumennikova\4_lab\WordsRecognition\WordsRecognition\obj\Debug\WordsRecognition.csproj.GenerateResource.Cache
+C:\Users\svyatoslav\Desktop\gumennikova\4_lab\WordsRecognition\WordsRecognition\bin\Debug\WordsRecognition.exe
+C:\Users\svyatoslav\Desktop\gumennikova\4_lab\WordsRecognition\WordsRecognition\bin\Debug\WordsRecognition.pdb
+C:\Users\svyatoslav\Desktop\gumennikova\4_lab\WordsRecognition\WordsRecognition\bin\Debug\ClassLibraryNeuralNetworks.dll
+C:\Users\svyatoslav\Desktop\gumennikova\4_lab\WordsRecognition\WordsRecognition\obj\Debug\WordsRecognition.exe
+C:\Users\svyatoslav\Desktop\gumennikova\4_lab\WordsRecognition\WordsRecognition\obj\Debug\WordsRecognition.pdb
+C:\Users\svyatoslav\Desktop\gumennikova\4_lab\WordsRecognition\WordsRecognition\bin\Debug\Resources\network.nw
+C:\Users\svyatoslav\Desktop\gumennikova\4_lab\WordsRecognition\WordsRecognition\bin\Debug\Resources\1.bmp
+C:\Users\svyatoslav\Desktop\gumennikova\4_lab\WordsRecognition\WordsRecognition\bin\Debug\Resources\2.bmp
+C:\Users\svyatoslav\Desktop\gumennikova\4_lab\WordsRecognition\WordsRecognition\bin\Debug\Resources\3.bmp
+C:\Users\svyatoslav\Desktop\gumennikova\4_lab\WordsRecognition\WordsRecognition\bin\Debug\Resources\12.png
